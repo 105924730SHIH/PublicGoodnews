@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>每日彙整快報</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#4F46E5" />
+  <link rel="icon" href="/icons/favicon.ico" />
+  <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="每日快報" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="description" content="公開資訊觀測站(MOPS)重大訊息 + 工商日報(CTEE)理財新聞，一鍵彙整並推播到 Telegram" />
+
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="top">
+      <h1>📊 每日彙整快報</h1>
+      <div class="subtitle">公開資訊觀測站 × 工商日報　自動整理並推播到 Telegram</div>
+    </header>
+
+    <div id="install-banner">
+      <span>📲 將此應用程式加到主畫面，開啟更快速！</span>
+      <div>
+        <button id="install-btn">安裝</button>
+        <button id="dismiss-install-btn" style="background:transparent;color:white;">✕</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>🔑 Telegram 設定</h2>
+        <label for="token-input">Bot Token</label>
+        <input type="password" id="token-input" placeholder="123456789:AAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
+
+        <label for="chatid-input">Chat ID</label>
+        <input type="text" id="chatid-input" placeholder="例如 7742797182" autocomplete="off" />
+
+        <h2 style="margin-top:20px;">⚙️ 抓取設定</h2>
+        <label for="mops-slider">公開資訊觀測站 筆數 <span class="slider-value" id="mops-value">10</span></label>
+        <input type="range" id="mops-slider" min="1" max="20" value="10" step="1" />
+
+        <label for="ctee-slider">工商日報 筆數 <span class="slider-value" id="ctee-value">10</span></label>
+        <input type="range" id="ctee-slider" min="1" max="20" value="10" step="1" />
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="fetch-btn">🔍 抓取並預覽</button>
+          <button class="btn btn-primary" id="send-btn">📤 發送到 Telegram</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-danger" id="all-btn">⚡ 一鍵抓取並發送</button>
+        </div>
+
+        <div id="status-box"></div>
+      </div>
+
+      <div class="card">
+        <h2>📄 內容預覽</h2>
+        <div id="preview">
+          <div class="empty">尚未抓取資料</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      ⚠️ Token 僅在瀏覽器與本次請求中使用，伺服器不會儲存或紀錄。
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
