@@ -1,21 +1,32 @@
-// 每日彙整快報 PWA - Service Worker
-// 快取「應用外殼」(HTML/CSS/JS/圖示)，讓使用者離線時仍能開啟畫面。
-// /api/ 開頭的資料請求一律走網路，不做快取（資料本來就需要每次即時抓取）。
+/**
+ * sw.js — Service Worker
+ * ------------------------------------------------------------
+ * 策略：
+ *   - App Shell（HTML / CSS / JS / manifest / icons）：Cache First，
+ *     並在背景更新快取（stale-while-revalidate）。
+ *   - /api/ 開頭的動態資料請求：Network First，離線時才退回快取。
+ * ------------------------------------------------------------
+ */
 
 const CACHE_VERSION = "v1";
-const CACHE_NAME = `daily-digest-shell-${CACHE_VERSION}`;
+const CACHE_NAME = `daily-news-pwa-${CACHE_VERSION}`;
 
 const APP_SHELL = [
   "/",
+  "/static/style.css",
+  "/static/app.js",
   "/manifest.json",
-  "/static/css/style.css",
-  "/static/js/app.js",
+  "/icons/icon-72.png",
+  "/icons/icon-96.png",
+  "/icons/icon-128.png",
+  "/icons/icon-144.png",
+  "/icons/icon-152.png",
   "/icons/icon-192.png",
+  "/icons/icon-384.png",
   "/icons/icon-512.png",
-  "/icons/favicon.ico",
 ];
 
-// 安裝階段：預先快取應用外殼
+// 安裝階段：預先快取 App Shell
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
@@ -29,7 +40,7 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key.startsWith("daily-digest-shell-") && key !== CACHE_NAME)
+          .filter((key) => key.startsWith("daily-news-pwa-") && key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       )
     )
@@ -42,32 +53,38 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // 非 GET 請求（例如 POST /api/fetch, /api/send）一律直接透過網路，不快取
   if (request.method !== "GET") {
+    // POST（例如 /api/fetch、/api/send）一律走網路，不做快取
     return;
   }
 
-  // API 資料一律走網路優先，失敗時不回退快取（避免顯示過期新聞）
+  // 動態 API：Network First
   if (url.pathname.startsWith("/api/")) {
-    event.respondWith(fetch(request));
-    return;
-  }
-
-  // 應用外殼：快取優先，找不到再打網路，並且把新的結果補進快取
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-      return fetch(request)
+    event.respondWith(
+      fetch(request)
         .then((response) => {
-          if (response && response.status === 200 && response.type === "basic") {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           return response;
         })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // App Shell 與靜態資源：Cache First + 背景更新
+  event.respondWith(
+    caches.match(request).then((cached) => {
+      const fetchPromise = fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return networkResponse;
+        })
         .catch(() => cached);
+      return cached || fetchPromise;
     })
   );
 });

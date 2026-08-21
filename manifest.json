@@ -1,28 +1,27 @@
 {
-  "name": "每日彙整快報",
-  "short_name": "每日快報",
-  "description": "公開資訊觀測站(MOPS)重大訊息 + 工商日報(CTEE)理財新聞，一鍵彙整並推播到 Telegram",
+  "name": "每日資訊整理 · Telegram 推播",
+  "short_name": "資訊推播",
+  "description": "公開資訊觀測站重大訊息 × 工商日報理財新訊，一鍵整理並推播至 Telegram",
   "start_url": "/",
+  "id": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#F3F4F6",
-  "theme_color": "#4F46E5",
+  "background_color": "#f3f6fb",
+  "theme_color": "#2481cc",
   "lang": "zh-TW",
   "dir": "ltr",
+  "categories": ["news", "finance", "productivity"],
   "icons": [
-    { "src": "/icons/icon-16.png", "sizes": "16x16", "type": "image/png" },
-    { "src": "/icons/icon-32.png", "sizes": "32x32", "type": "image/png" },
     { "src": "/icons/icon-72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
     { "src": "/icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
